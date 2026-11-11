@@ -1,0 +1,29 @@
+---
+import type { Post } from '../utils/content';
+import PostItem from './PostItem.astro';
+interface Props {
+  posts: Post[];
+  showDescription?: boolean;
+}
+const { posts, showDescription = true } = Astro.props;
+---
+
+{
+  posts.length === 0 ? (
+    <p class="muted">// chưa có bài viết nào</p>
+  ) : (
+    <ul class="post-list">
+      {posts.map((post) => (
+        <PostItem post={post} showDescription={showDescription} />
+      ))}
+    </ul>
+  )
+}
+
+<style>
+  .post-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+</style>

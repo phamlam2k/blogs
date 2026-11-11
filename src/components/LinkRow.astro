@@ -1,0 +1,88 @@
+---
+import { render } from 'astro:content';
+import type { LinkItem } from '../utils/content';
+import { formatDate } from '../utils/content';
+import TopicBadge from './TopicBadge.astro';
+import TagList from './TagList.astro';
+
+interface Props {
+  link: LinkItem;
+  compact?: boolean;
+}
+const { link, compact = false } = Astro.props;
+const { title, url, source, addedDate, topic, tags } = link.data;
+const { Content } = await render(link);
+const hasNote = (link.body ?? '').trim().length > 0;
+let host = '';
+try {
+  host = new URL(url).hostname.replace(/^www\./, '');
+} catch {}
+---
+
+<li class="link-row">
+  <time class="muted" datetime={addedDate.toISOString()}>{formatDate(addedDate)}</time>
+  <div>
+    <a href={url} target="_blank" rel="noopener" class="title">{title} <span class="ext">↗</span></a>
+    <div class="src muted">{source} · {host}</div>
+    {!compact && hasNote && (
+      <div class="note">
+        <Content />
+      </div>
+    )}
+    <div class="meta">
+      <TopicBadge topic={topic} />
+      <TagList tags={tags} />
+    </div>
+  </div>
+</li>
+
+<style>
+  .link-row {
+    display: grid;
+    grid-template-columns: 6.5rem 1fr;
+    gap: 0 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px dashed var(--border);
+    list-style: none;
+  }
+  time {
+    font-size: 0.85rem;
+  }
+  .title {
+    color: var(--fg);
+    font-weight: 600;
+  }
+  .title:hover {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .ext {
+    color: var(--fg-muted);
+    font-size: 0.8em;
+  }
+  .src {
+    font-size: 0.8rem;
+  }
+  .note {
+    font-size: 0.88rem;
+    color: var(--fg-muted);
+    border-left: 2px solid var(--accent);
+    padding-left: 0.75rem;
+    margin: 0.4rem 0;
+  }
+  .note :global(p) {
+    margin: 0.2rem 0;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: baseline;
+    margin-top: 0.2rem;
+  }
+  @media (max-width: 560px) {
+    .link-row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

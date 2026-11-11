@@ -1,0 +1,104 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostList from '../components/PostList.astro';
+import RepoCard from '../components/RepoCard.astro';
+import LinkRow from '../components/LinkRow.astro';
+import TagList from '../components/TagList.astro';
+import { SOCIALS, TOPICS, type TopicKey } from '../consts';
+import { getAll, getTagCounts, getTopicCounts } from '../utils/content';
+import { Content as Intro } from '../intro.md';
+
+const { posts, repos, links } = await getAll();
+const pinned = posts.filter((p) => p.data.pinned);
+const latest = [...pinned, ...posts.filter((p) => !p.data.pinned)].slice(0, 6);
+const tagCounts = await getTagCounts();
+const topTags = [...tagCounts.keys()].slice(0, 15);
+const topicCounts = await getTopicCounts();
+---
+
+<BaseLayout>
+  <section class="hero">
+    <p class="prompt muted">whoami</p>
+    <div class="prose"><Intro /></div>
+    <p class="muted small">
+      <span class="accent">{posts.length}</span> blogs{' · '}<span class="accent">{repos.length}</span> repo{' · '}
+      <span class="accent">{links.length}</span> links{' · '}press <kbd>/</kbd> to search
+      {SOCIALS.github && <>{' · '}<a href={SOCIALS.github} target="_blank" rel="noopener">GitHub ↗</a></>}
+    </p>
+  </section>
+
+  <h2 class="section-title">topic</h2>
+  <ul class="topics">
+    {(Object.keys(TOPICS) as TopicKey[]).map((key) => (
+      <li>
+        <a href={`/topics/${key}/`}>{TOPICS[key].name.toLowerCase()}/</a>
+        <span class="muted">{topicCounts[key] ?? 0}</span>
+      </li>
+    ))}
+  </ul>
+
+  {repos.length > 0 && (
+    <>
+      <h2 class="section-title">repo highly recommend</h2>
+      <div class="repo-grid">
+        {repos.slice(0, 4).map((repo) => <RepoCard repo={repo} compact />)}
+      </div>
+      <p><a href="/repos/">repos →</a></p>
+    </>
+  )}
+
+  {links.length > 0 && (
+    <>
+      <h2 class="section-title">read more</h2>
+      <ul class="plain">
+        {links.slice(0, 4).map((link) => <LinkRow link={link} compact />)}
+      </ul>
+      <p><a href="/lien-ket/">links →</a></p>
+    </>
+  )}
+
+  <h2 class="section-title">labels</h2>
+  <TagList tags={topTags} counts={tagCounts} />
+
+  <h2 class="section-title">new blogs</h2>
+  <PostList posts={latest} />
+  <p><a href="/blogs/">view more →</a></p>
+</BaseLayout>
+
+<style>
+  .hero .prompt {
+    margin: 0 0 0.5rem;
+    font-size: 0.85rem;
+  }
+  .hero .prose :global(p) {
+    margin: 0 0 0.9rem;
+  }
+  .small {
+    font-size: 0.85rem;
+  }
+  .topics {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+    gap: 0.35rem 1rem;
+  }
+  .topics li {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px dashed var(--border);
+  }
+  .topics a {
+    color: var(--warn);
+  }
+  .repo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+    gap: 0.75rem;
+  }
+  .plain {
+    padding: 0;
+    margin: 0;
+  }
+</style>

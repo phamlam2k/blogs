@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import PostList from '../../components/PostList.astro';
+import { getPosts, groupByYear } from '../../utils/content';
+
+const posts = await getPosts();
+const years = groupByYear(posts);
+---
+
+<BaseLayout title="Tất cả bài viết" description="Toàn bộ bài viết trên blog, sắp xếp theo năm.">
+  <PageHeader command="ls -lt ./blogs" title="Bài viết" description={`${posts.length} bài viết`} />
+  {
+    years.map(([year, list]) => (
+      <section>
+        <h2 class="section-title">{year}</h2>
+        <PostList posts={list} />
+      </section>
+    ))
+  }
+</BaseLayout>

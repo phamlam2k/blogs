@@ -1,0 +1,33 @@
+---
+// Tiêu đề trang dạng lệnh terminal: $ ls ./topics
+interface Props {
+  command: string;
+  title: string;
+  description?: string;
+}
+const { command, title, description } = Astro.props;
+---
+
+<div class="page-header">
+  <p class="cmd prompt">{command}</p>
+  <h1>{title}</h1>
+  {description && <p class="muted desc">{description}</p>}
+</div>
+
+<style>
+  .page-header {
+    margin-bottom: 1.5rem;
+  }
+  .cmd {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--fg-muted);
+  }
+  h1 {
+    margin: 0.25rem 0 0.25rem;
+  }
+  .desc {
+    margin: 0;
+    font-size: 0.92rem;
+  }
+</style>

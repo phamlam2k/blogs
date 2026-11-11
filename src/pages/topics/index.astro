@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import { TOPICS, type TopicKey } from '../../consts';
+import { getAll } from '../../utils/content';
+
+const { posts, repos, links } = await getAll();
+const count = (key: TopicKey) => ({
+  posts: posts.filter((p) => p.data.topic === key).length,
+  repos: repos.filter((r) => r.data.topic === key).length,
+  links: links.filter((l) => l.data.topic === key).length,
+});
+---
+
+<BaseLayout title="Chủ đề" description="Các chủ đề trên blog: frontend, backend, DevOps, thuật toán, công cụ và ghi chép.">
+  <PageHeader command="tree -L 1 ./topics" title="Chủ đề" />
+  <ul class="topic-list">
+    {(Object.keys(TOPICS) as TopicKey[]).map((key) => {
+      const c = count(key);
+      return (
+        <li>
+          <a href={`/topics/${key}/`} class="name">{key}/</a>
+          <p class="muted">{TOPICS[key].description}</p>
+          <p class="stats muted">{c.posts} bài viết · {c.repos} repo · {c.links} liên kết</p>
+        </li>
+      );
+    })}
+  </ul>
+</BaseLayout>
+
+<style>
+  .topic-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  li {
+    padding: 0.75rem 0;
+    border-bottom: 1px dashed var(--border);
+  }
+  .name {
+    color: var(--warn);
+    font-weight: 700;
+    font-size: 1.05rem;
+  }
+  p {
+    margin: 0.15rem 0 0;
+    font-size: 0.9rem;
+  }
+  .stats {
+    font-size: 0.8rem;
+  }
+</style>

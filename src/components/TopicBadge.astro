@@ -1,0 +1,21 @@
+---
+import { TOPICS, type TopicKey } from '../consts';
+interface Props {
+  topic: TopicKey;
+}
+const { topic } = Astro.props;
+---
+
+<a class="topic" href={`/topics/${topic}/`}>[{TOPICS[topic].name.toLowerCase()}]</a>
+
+<style>
+  .topic {
+    color: var(--warn);
+    font-size: 0.82rem;
+    white-space: nowrap;
+  }
+  .topic:hover {
+    text-decoration: none;
+    opacity: 0.8;
+  }
+</style>

@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import RepoCard from '../components/RepoCard.astro';
+import { getRepos } from '../utils/content';
+
+const repos = await getRepos();
+const mine = repos.filter((r) => r.data.mine);
+const others = repos.filter((r) => !r.data.mine);
+---
+
+<BaseLayout title="Kho mã" description="Các repo GitHub mình viết hoặc thấy đáng xem, kèm ghi chú vì sao.">
+  <PageHeader command="gh repo list --starred" title="Kho mã" description="Repo của mình và những repo đáng lưu lại." />
+
+  {mine.length > 0 && (
+    <>
+      <h2 class="section-title">của mình</h2>
+      <div class="grid">{mine.map((r) => <RepoCard repo={r} />)}</div>
+    </>
+  )}
+
+  <h2 class="section-title">đáng xem</h2>
+  {others.length === 0 ? <p class="muted">// chưa có repo nào</p> : <div class="grid">{others.map((r) => <RepoCard repo={r} />)}</div>}
+</BaseLayout>
+
+<style>
+  .grid {
+    display: grid;
+    gap: 0.75rem;
+  }
+</style>

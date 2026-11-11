@@ -1,0 +1,290 @@
+/* ============================================================
+   dev blog — terminal-ish theme. Không dùng font ngoài, không framework CSS.
+   Muốn đổi chữ thân bài sang sans-serif: sửa --font-body bên dưới.
+   ============================================================ */
+
+:root {
+  --font-mono: ui-monospace, 'JetBrains Mono', 'Cascadia Code', 'SF Mono', Menlo, Consolas,
+    'Liberation Mono', monospace;
+  --font-body: var(--font-mono);
+  /* --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; */
+
+  --max-w: 46rem;
+  --radius: 6px;
+
+  /* light */
+  --bg: #fafaf7;
+  --bg-soft: #f0f0eb;
+  --fg: #24292f;
+  --fg-muted: #6e7781;
+  --border: #d8dee4;
+  --accent: #1a7f37; /* xanh lá terminal */
+  --accent-2: #0969da; /* link */
+  --warn: #9a6700;
+  --danger: #cf222e;
+  --selection: #1a7f3733;
+}
+
+html[data-theme='dark'] {
+  --bg: #0d1117;
+  --bg-soft: #161b22;
+  --fg: #c9d1d9;
+  --fg-muted: #8b949e;
+  --border: #30363d;
+  --accent: #7ee787;
+  --accent-2: #79c0ff;
+  --warn: #e3b341;
+  --danger: #ff7b72;
+  --selection: #7ee78733;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: light dark;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.75;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+::selection {
+  background: var(--selection);
+}
+
+main {
+  flex: 1;
+  width: 100%;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 4rem;
+}
+
+a {
+  color: var(--accent-2);
+  text-decoration: none;
+  text-underline-offset: 3px;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-mono);
+  line-height: 1.35;
+  margin: 2rem 0 0.75rem;
+  color: var(--fg);
+}
+h1 {
+  font-size: 1.6rem;
+}
+h2 {
+  font-size: 1.25rem;
+}
+h3 {
+  font-size: 1.05rem;
+}
+
+/* tiền tố kiểu markdown cho heading trong bài */
+.prose h2::before {
+  content: '## ';
+  color: var(--accent);
+}
+.prose h3::before {
+  content: '### ';
+  color: var(--accent);
+}
+
+hr {
+  border: 0;
+  border-top: 1px dashed var(--border);
+  margin: 2rem 0;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+}
+
+/* ---------- code ---------- */
+code,
+kbd,
+pre {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+:not(pre) > code {
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+}
+
+pre {
+  position: relative;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow-x: auto;
+  line-height: 1.6;
+}
+
+/* Shiki dual theme: mặc định light, đổi sang dark khi bật dark mode */
+html[data-theme='dark'] .astro-code,
+html[data-theme='dark'] .astro-code span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
+}
+
+.copy-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  font: inherit;
+  font-size: 0.75rem;
+  padding: 0.15rem 0.5rem;
+  color: var(--fg-muted);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+pre:hover .copy-btn,
+.copy-btn:focus {
+  opacity: 1;
+}
+
+kbd {
+  border: 1px solid var(--border);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  padding: 0 0.35em;
+  font-size: 0.8em;
+}
+
+/* ---------- prose ---------- */
+.prose p,
+.prose ul,
+.prose ol {
+  margin: 0 0 1.1rem;
+}
+.prose ul {
+  list-style: none;
+  padding-left: 1.25rem;
+}
+.prose ul > li::before {
+  content: '-';
+  color: var(--accent);
+  margin-left: -1.1rem;
+  position: absolute;
+}
+.prose li {
+  position: relative;
+  margin: 0.25rem 0;
+}
+.prose blockquote {
+  margin: 1.25rem 0;
+  padding: 0.25rem 1rem;
+  border-left: 3px solid var(--accent);
+  color: var(--fg-muted);
+  background: var(--bg-soft);
+}
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.25rem 0;
+  font-size: 0.9em;
+  display: block;
+  overflow-x: auto;
+}
+.prose th,
+.prose td {
+  border: 1px solid var(--border);
+  padding: 0.4rem 0.7rem;
+  text-align: left;
+}
+.prose th {
+  background: var(--bg-soft);
+}
+.prose a {
+  text-decoration: underline;
+}
+.prose h2 a.anchor,
+.prose h3 a.anchor {
+  text-decoration: none;
+}
+
+/* ---------- helpers dùng chung ---------- */
+.muted {
+  color: var(--fg-muted);
+}
+.accent {
+  color: var(--accent);
+}
+.prompt::before {
+  content: '$ ';
+  color: var(--accent);
+}
+.comment {
+  color: var(--fg-muted);
+}
+.comment::before {
+  content: '// ';
+}
+
+.section-title {
+  font-size: 1rem;
+  margin: 2.5rem 0 1rem;
+  color: var(--fg-muted);
+  font-weight: 600;
+}
+.section-title::before {
+  content: '# ';
+  color: var(--accent);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.skip-link {
+  position: absolute;
+  left: -999px;
+}
+.skip-link:focus {
+  left: 1rem;
+  top: 1rem;
+  background: var(--bg);
+  padding: 0.5rem;
+  z-index: 10;
+}
+
+:focus-visible {
+  outline: 2px dashed var(--accent);
+  outline-offset: 2px;
+}

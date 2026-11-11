@@ -1,0 +1,50 @@
+---
+// Dùng trong file .mdx:
+//   import Callout from '../../components/Callout.astro';
+//   <Callout type="warn" title="Lưu ý">Nội dung...</Callout>
+interface Props {
+  type?: 'info' | 'tip' | 'warn' | 'danger';
+  title?: string;
+}
+const { type = 'info', title } = Astro.props;
+const labels = { info: 'GHI CHÚ', tip: 'MẸO', warn: 'LƯU Ý', danger: 'CẢNH BÁO' };
+---
+
+<aside class={`callout ${type}`} role="note">
+  <div class="label">{title ?? labels[type]}</div>
+  <slot />
+</aside>
+
+<style>
+  .callout {
+    --c: var(--accent-2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--c);
+    border-radius: var(--radius);
+    background: var(--bg-soft);
+    padding: 0.6rem 1rem;
+    margin: 1.25rem 0;
+    font-size: 0.92rem;
+  }
+  .tip {
+    --c: var(--accent);
+  }
+  .warn {
+    --c: var(--warn);
+  }
+  .danger {
+    --c: var(--danger);
+  }
+  .label {
+    color: var(--c);
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+  }
+  .label::before {
+    content: '> ';
+  }
+  .callout :global(p:last-child) {
+    margin-bottom: 0;
+  }
+</style>

@@ -1,0 +1,110 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+---
+
+<BaseLayout title="Tìm kiếm" description="Tìm bài viết, repo và liên kết trên blog." noindex>
+  <PageHeader command="grep -ri" title="Tìm kiếm" />
+  <label class="box">
+    <span class="accent">&gt;</span>
+    <input id="q" type="search" placeholder="gõ từ khoá, #nhãn hoặc chủ đề..." autocomplete="off" autofocus />
+  </label>
+  <p id="status" class="muted small"></p>
+  <ul id="results"></ul>
+</BaseLayout>
+
+<script>
+  type Item = { type: string; title: string; desc: string; url: string; topic: string; tags: string[]; date: string };
+
+  const input = document.getElementById('q') as HTMLInputElement;
+  const list = document.getElementById('results')!;
+  const status = document.getElementById('status')!;
+  let data: Item[] = [];
+
+  // Bỏ dấu tiếng Việt để gõ "su kien" vẫn ra "sự kiện"
+  const norm = (s: string) =>
+    s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd');
+
+  const esc = (s: string) => s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
+
+  function run() {
+    const q = norm(input.value.trim());
+    const url = new URL(location.href);
+    q ? url.searchParams.set('q', input.value.trim()) : url.searchParams.delete('q');
+    history.replaceState(null, '', url);
+    if (!q) {
+      list.innerHTML = '';
+      status.textContent = `${data.length} mục có thể tìm`;
+      return;
+    }
+    const terms = q.split(/\s+/);
+    const hits = data.filter((it) => {
+      const hay = norm([it.title, it.desc, it.topic, ...it.tags.map((t) => '#' + t)].join(' '));
+      return terms.every((t) => hay.includes(t));
+    });
+    status.textContent = `${hits.length} kết quả`;
+    list.innerHTML = hits
+      .map((it) => {
+        const ext = it.type !== 'bài viết';
+        return `<li>
+          <span class="type">[${it.type}]</span>
+          <a href="${esc(it.url)}"${ext ? ' target="_blank" rel="noopener"' : ''}>${esc(it.title)}${ext ? ' ↗' : ''}</a>
+          <div class="muted small">${esc(it.date)} · ${esc(it.topic)} · ${it.tags.map((t) => '#' + esc(t)).join(' ')}</div>
+          <div class="muted small">${esc(it.desc)}</div>
+        </li>`;
+      })
+      .join('');
+  }
+
+  fetch('/search.json')
+    .then((r) => r.json())
+    .then((json: Item[]) => {
+      data = json;
+      const q = new URL(location.href).searchParams.get('q');
+      if (q) input.value = q;
+      run();
+    });
+  input.addEventListener('input', run);
+</script>
+
+<style>
+  .box {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.5rem 0.75rem;
+    background: var(--bg-soft);
+  }
+  .box:focus-within {
+    border-color: var(--accent);
+  }
+  input {
+    flex: 1;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--fg);
+    font: inherit;
+  }
+  .small {
+    font-size: 0.82rem;
+  }
+  #results {
+    list-style: none;
+    padding: 0;
+  }
+  #results :global(li) {
+    padding: 0.6rem 0;
+    border-bottom: 1px dashed var(--border);
+  }
+  #results :global(.type) {
+    color: var(--warn);
+    font-size: 0.8rem;
+    margin-right: 0.3rem;
+  }
+  #results :global(.small) {
+    font-size: 0.8rem;
+  }
+</style>

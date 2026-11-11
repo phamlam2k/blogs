@@ -1,0 +1,37 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import { getTagCounts } from '../../utils/content';
+
+const counts = await getTagCounts();
+const max = Math.max(1, ...counts.values());
+---
+
+<BaseLayout title="Nhãn" description="Tất cả nhãn của bài viết, repo và link trên blog.">
+  <PageHeader command="grep -o '#[a-z-]*' -r . | sort | uniq -c" title="Nhãn" description={`${counts.size} nhãn`} />
+  <ul class="cloud">
+    {[...counts.entries()].map(([tag, n]) => (
+      <li style={`--w:${0.85 + (n / max) * 0.5}rem`}>
+        <a href={`/nhan/${tag}/`}>#{tag}</a><span class="muted">{n}</span>
+      </li>
+    ))}
+  </ul>
+</BaseLayout>
+
+<style>
+  .cloud {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+  }
+  li {
+    font-size: var(--w);
+  }
+  span {
+    font-size: 0.7em;
+    margin-left: 0.2rem;
+    vertical-align: super;
+  }
+</style>

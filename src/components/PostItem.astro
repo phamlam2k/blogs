@@ -1,0 +1,75 @@
+---
+import type { Post } from '../utils/content';
+import { formatDate } from '../utils/content';
+import TopicBadge from './TopicBadge.astro';
+import TagList from './TagList.astro';
+
+interface Props {
+  post: Post;
+  showDescription?: boolean;
+}
+const { post, showDescription = true } = Astro.props;
+const { title, description, pubDate, topic, tags, draft, pinned } = post.data;
+---
+
+<li class="post-item">
+  <time datetime={pubDate.toISOString()} class="muted">{formatDate(pubDate)}</time>
+  <div class="body">
+    <a class="title" href={`/blogs/${post.id}/`}>
+      {pinned && <span class="pin" title="Bài ghim">📌</span>}
+      {draft && <span class="draft">[nháp]</span>}
+      {title}
+    </a>
+    {showDescription && <p class="desc muted">{description}</p>}
+    <div class="meta">
+      <TopicBadge topic={topic} />
+      <TagList tags={tags} />
+    </div>
+  </div>
+</li>
+
+<style>
+  .post-item {
+    display: grid;
+    grid-template-columns: 6.5rem 1fr;
+    gap: 0 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px dashed var(--border);
+  }
+  time {
+    font-size: 0.85rem;
+    padding-top: 0.1rem;
+  }
+  .title {
+    color: var(--fg);
+    font-weight: 600;
+  }
+  .title:hover {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .desc {
+    margin: 0.2rem 0 0.35rem;
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: baseline;
+  }
+  .draft {
+    color: var(--danger);
+    margin-right: 0.35rem;
+  }
+  .pin {
+    margin-right: 0.3rem;
+    font-size: 0.8em;
+  }
+  @media (max-width: 560px) {
+    .post-item {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

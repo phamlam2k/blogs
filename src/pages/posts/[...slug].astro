@@ -1,0 +1,141 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TopicBadge from '../../components/TopicBadge.astro';
+import TagList from '../../components/TagList.astro';
+import TOC from '../../components/TOC.astro';
+import PostList from '../../components/PostList.astro';
+import RepoCard from '../../components/RepoCard.astro';
+import LinkRow from '../../components/LinkRow.astro';
+import {
+  getPosts,
+  getRepos,
+  getLinks,
+  getRelatedPosts,
+  getRelatedShares,
+  readingTime,
+  formatDate,
+  type Post,
+} from '../../utils/content';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post, i) => ({
+    params: { slug: post.id },
+    props: { post, newer: posts[i - 1], older: posts[i + 1] },
+  }));
+}
+
+interface Props {
+  post: Post;
+  newer?: Post;
+  older?: Post;
+}
+
+const { post, newer, older } = Astro.props;
+const { title, description, pubDate, updatedDate, topic, tags, draft } = post.data;
+const { Content, headings } = await render(post);
+
+const [allPosts, repos, links] = await Promise.all([getPosts(), getRepos(), getLinks()]);
+const related = getRelatedPosts(post, allPosts);
+const relatedRepos = getRelatedShares(post, repos, 2);
+const relatedLinks = getRelatedShares(post, links, 3);
+const minutes = readingTime(post.body);
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  type="article"
+  publishedTime={pubDate}
+  modifiedTime={updatedDate}
+  tags={tags}
+  noindex={draft}
+>
+  <article>
+    <header class="post-header">
+      <p class="crumbs muted"><a href="/blogs/">bài viết</a> / <TopicBadge topic={topic} /></p>
+      <h1>{draft && <span class="draft">[nháp] </span>}{title}</h1>
+      <p class="meta muted">
+        <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
+        {updatedDate && <>{' · cập nhật '}<time datetime={updatedDate.toISOString()}>{formatDate(updatedDate)}</time></>}
+        {` · ${minutes} phút đọc`}
+      </p>
+      <TagList tags={tags} />
+    </header>
+
+    <TOC headings={headings} />
+
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
+
+  <nav class="pager" aria-label="Bài trước / sau">
+    {older ? <a href={`/blogs/${older.id}/`}>← {older.data.title}</a> : <span />}
+    {newer ? <a href={`/blogs/${newer.id}/`} class="right">{newer.data.title} →</a> : <span />}
+  </nav>
+
+  {related.length > 0 && (
+    <section>
+      <h2 class="section-title">bài viết liên quan</h2>
+      <PostList posts={related} showDescription={false} />
+    </section>
+  )}
+
+  {relatedRepos.length > 0 && (
+    <section>
+      <h2 class="section-title">repo liên quan</h2>
+      <div class="grid">{relatedRepos.map((r) => <RepoCard repo={r} compact />)}</div>
+    </section>
+  )}
+
+  {relatedLinks.length > 0 && (
+    <section>
+      <h2 class="section-title">đọc thêm</h2>
+      <ul class="plain">{relatedLinks.map((l) => <LinkRow link={l} compact />)}</ul>
+    </section>
+  )}
+</BaseLayout>
+
+<style>
+  .post-header {
+    margin-bottom: 1rem;
+  }
+  .post-header h1 {
+    margin: 0.25rem 0 0.4rem;
+    font-size: 1.75rem;
+  }
+  .crumbs,
+  .meta {
+    margin: 0;
+    font-size: 0.85rem;
+  }
+  .meta {
+    margin-bottom: 0.4rem;
+  }
+  .draft {
+    color: var(--danger);
+  }
+  .pager {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 3rem;
+    padding-top: 1rem;
+    border-top: 1px dashed var(--border);
+    font-size: 0.88rem;
+  }
+  .pager .right {
+    text-align: right;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+    gap: 0.75rem;
+  }
+  .plain {
+    padding: 0;
+    margin: 0;
+  }
+</style>
