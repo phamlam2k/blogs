@@ -1,4 +1,4 @@
-# dac.dev — blog lập trình viên (Astro)
+# liam.dev — blog lập trình viên (Astro)
 
 Blog tĩnh, nhẹ, tốt cho SEO: mặc định không có JavaScript trên trang, chỉ có vài đoạn script nhỏ cho nút đổi theme, nút copy code và trang tìm kiếm.
 
