@@ -1,87 +1,87 @@
-# liam.dev — blog lập trình viên (Astro)
+# liam.dev — a developer blog (Astro)
 
-Blog tĩnh, nhẹ, tốt cho SEO: mặc định không có JavaScript trên trang, chỉ có vài đoạn script nhỏ cho nút đổi theme, nút copy code và trang tìm kiếm.
+A static, lightweight, SEO-friendly blog: no JavaScript on the page by default, just a few tiny scripts for the theme toggle, the copy-code button and the search page.
 
-## Chạy lần đầu
+## Getting started
 
-Cần **Node.js 22 bản mới nhất** (Astro 7 yêu cầu `>= 22.23`). Kiểm tra bằng `node -v`.
+Requires the **latest Node.js 22** (Astro 7 needs `>= 22.23`). Check with `node -v`.
 
 ```bash
 npm install
-npm run dev        # mở http://localhost:4321
+npm run dev        # open http://localhost:4321
 ```
 
-| Lệnh | Tác dụng |
+| Command | What it does |
 | --- | --- |
-| `npm run dev` | chạy local, sửa file là trang tự reload (hiện cả bài `draft`) |
-| `npm run build` | build ra thư mục `dist/` để deploy |
-| `npm run preview` | xem thử bản build |
-| `npm run check` | kiểm tra lỗi TypeScript / frontmatter |
+| `npm run dev` | run locally with live reload (also shows `draft` posts) |
+| `npm run build` | build into `dist/` for deployment |
+| `npm run preview` | preview the production build |
+| `npm run check` | check TypeScript / frontmatter errors |
 
-## Việc cần làm 1 lần
+## One-time setup
 
-1. `src/consts.ts`: sửa `title`, `description`, `author`, link GitHub/email.
-2. `astro.config.mjs`: đổi `SITE_URL` thành domain thật.
-3. `public/robots.txt`: đổi `https://example.com` thành domain thật.
-4. `public/og-default.png`: ảnh 1200×630 hiện khi share link. Thay bằng ảnh của bạn nếu muốn.
-5. `src/intro.md`: lời giới thiệu ngắn trên trang chủ. `src/pages/gioi-thieu.astro`: trang giới thiệu chi tiết.
-6. Xoá các bài, repo và link mẫu trong `src/content/` khi không cần nữa.
+1. `src/consts.ts`: edit `title`, `description`, `author`, GitHub/email links.
+2. `astro.config.mjs`: change `SITE_URL` to your real domain.
+3. `public/robots.txt`: replace `https://example.com` with your real domain.
+4. `public/og-default.png`: the 1200×630 image shown when a link is shared. Replace it with your own if you like.
+5. `src/intro.md`: the short intro on the home page.
 
-## Lên bài — chỉ cần tạo file Markdown
+## Publishing — just create a Markdown file
 
-Có sẵn file mẫu trong thư mục `templates/`. Copy file mẫu vào đúng thư mục rồi sửa.
+Templates live in `templates/`. Copy one into the right folder and edit it.
 
-| Muốn đăng | Tạo file ở | Mẫu |
+| To publish | Create a file in | Template |
 | --- | --- | --- |
-| Bài viết của bạn | `src/content/blog/ten-bai.md` (hoặc `.mdx`) | `templates/post.md` |
-| Repo GitHub | `src/content/repos/owner-repo.md` | `templates/repo.md` |
-| Bài viết hay của người khác | `src/content/links/ten-link.md` | `templates/link.md` |
+| Your own post | `src/content/blog/my-post.md` (or `.mdx`, subfolders allowed) | `templates/post.md` |
+| A GitHub repo | `src/content/repos/owner-repo.md` | `templates/repo.md` |
+| A great article by someone else | `src/content/links/link-name.md` | `templates/link.md` |
 
-- **Tên file = URL**: `src/content/blog/docker-tips.md` sẽ thành `/blogs/docker-tips/`. Nên đặt tên không dấu, nối bằng gạch ngang.
-- **topic** (chủ đề): mỗi mục thuộc đúng 1 chủ đề: `frontend`, `backend`, `devops`, `thuat-toan`, `cong-cu`, `ghi-chep`. Danh sách nằm trong `src/consts.ts`; muốn thêm chủ đề thì thêm một mục ở đó.
-- **tags** (nhãn): gắn bao nhiêu cũng được. Tag tự chuyển thành chữ thường, khoảng trắng đổi thành `-`. Bài liên quan được tính theo tag trùng nhau (+2 điểm mỗi tag) và cùng topic (+1 điểm). Repo và link có tag trùng cũng hiện ở cuối bài.
-- **draft: true**: bài nháp, chỉ thấy khi chạy `npm run dev`, không lên bản build.
-- **pinned: true**: ghim bài lên đầu trang chủ.
-- Ảnh trong bài: để trong `public/images/` rồi chèn bằng `![mô tả](/images/ten-anh.png)`.
-- Trong file `.mdx` có thể dùng component `Callout` (khung ghi chú/mẹo/lưu ý); cách dùng ghi ở đầu file `src/components/Callout.astro`.
+- **File path = URL**: `src/content/blog/algorithms/tree.md` becomes `/posts/algorithms/tree/`. Use lowercase, dash-separated names.
+- **topic**: each item belongs to exactly 1 topic: `frontend` or `algorithms`. The list lives in `src/consts.ts`; add an entry there to create a new topic.
+- **tags** (labels): as many as you like. Tags are lowercased automatically and spaces become `-`. Related posts are scored by shared tags (+2 each) and same topic (+1). Repos and links with shared tags also show up at the end of a post.
+- **series / seriesOrder** (optional): group posts into a series, e.g. "Algorithms Hiding in Your Frontend".
+- **draft: true**: a draft, only visible with `npm run dev`, excluded from the build.
+- **pinned: true**: pin the post to the top of the home page.
+- Images: put them in `public/images/` and embed with `![description](/images/my-image.png)`.
+- In `.mdx` files you can use the `Callout` component (note/tip/warning boxes); usage is documented at the top of `src/components/Callout.astro`.
 
-Nếu frontmatter sai (thiếu `title`, topic không tồn tại, url sai định dạng...), `npm run dev` và `npm run build` sẽ báo lỗi chỉ rõ file nào.
+If the frontmatter is invalid (missing `title`, unknown topic, malformed url...), `npm run dev` and `npm run build` will report exactly which file is wrong.
 
-## Cấu trúc
+## Structure
 
 ```text
 src/
-├── consts.ts            # cấu hình site, menu, danh sách TOPICS
-├── content.config.ts    # schema frontmatter của blog / repos / links
+├── consts.ts            # site config, menu, TOPICS list
+├── content.config.ts    # frontmatter schemas for blog / repos / links
 ├── content/
-│   ├── blog/            # bài viết của bạn
-│   ├── repos/           # repo GitHub share
-│   └── links/           # bài viết hay của người khác
+│   ├── blog/            # your posts (e.g. blog/algorithms/ for the algorithms series)
+│   ├── repos/           # shared GitHub repos
+│   └── links/           # great articles by other people
 ├── components/          # Header, Footer, PostItem, RepoCard, TOC, Callout...
 ├── layouts/BaseLayout.astro
-├── intro.md             # lời giới thiệu trên trang chủ
-├── pages/               # các route: /, /blogs, /topics, /nhan, /repos, /lien-ket, /search, /rss.xml
-├── styles/global.css    # toàn bộ theme (màu, font) — sửa biến CSS ở đầu file
-└── utils/content.ts     # lấy dữ liệu, tính bài liên quan, thời gian đọc
-templates/               # file mẫu để copy khi lên bài
+├── intro.md             # intro on the home page
+├── pages/               # routes: /, /posts, /topics, /labels, /repos, /links, /search, /rss.xml
+├── styles/global.css    # the whole theme (colors, fonts) — edit the CSS variables at the top
+└── utils/content.ts     # data fetching, related posts, reading time
+templates/               # templates to copy when publishing
 ```
 
-## SEO có sẵn
+## Built-in SEO
 
-- HTML tĩnh hoàn toàn, có title / description / canonical riêng cho từng trang.
-- Open Graph và Twitter card, nên share lên Facebook, Zalo hay X đều có ảnh và mô tả.
-- JSON-LD (`BlogPosting` cho bài viết, `WebSite` cho trang chủ).
+- Fully static HTML with a unique title / description / canonical per page.
+- Open Graph and Twitter cards, so shared links get an image and description.
+- JSON-LD (`BlogPosting` for posts, `WebSite` for the home page).
 - `sitemap-index.xml`, `rss.xml`, `robots.txt`.
-- Bài nháp và trang tìm kiếm được gắn `noindex`.
+- Drafts and the search page are marked `noindex`.
 
-Sau khi deploy, khai báo sitemap trong **Google Search Console** để Google index nhanh hơn.
+After deploying, submit the sitemap in **Google Search Console** to get indexed faster.
 
-## Deploy (miễn phí)
+## Deploy (free)
 
-**Cloudflare Pages / Vercel / Netlify**: đẩy repo lên GitHub rồi import vào một trong ba dịch vụ.
+**Cloudflare Pages / Vercel / Netlify**: push the repo to GitHub and import it into one of them.
 
 - Build command: `npm run build`
 - Output directory: `dist`
-- Biến môi trường: `NODE_VERSION=22` (nếu dịch vụ hỏi)
+- Environment variable: `NODE_VERSION=22` (if asked)
 
-Từ đó, mỗi lần `git push` một bài mới là site tự build và cập nhật.
+From then on, every `git push` with a new post rebuilds and updates the site.

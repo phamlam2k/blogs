@@ -15,9 +15,9 @@ const { title, description, pubDate, topic, tags, draft, pinned } = post.data;
 <li class="post-item">
   <time datetime={pubDate.toISOString()} class="muted">{formatDate(pubDate)}</time>
   <div class="body">
-    <a class="title" href={`/blogs/${post.id}/`}>
-      {pinned && <span class="pin" title="Bài ghim">📌</span>}
-      {draft && <span class="draft">[nháp]</span>}
+    <a class="title" href={`/posts/${post.id}/`}>
+      {pinned && <span class="pin" title="Pinned post">📌</span>}
+      {draft && <span class="draft">[draft]</span>}
       {title}
     </a>
     {showDescription && <p class="desc muted">{description}</p>}

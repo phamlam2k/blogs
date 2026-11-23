@@ -28,7 +28,7 @@ const fullTitle = title ? `${title} | ${SITE.title}` : `${SITE.title} — ${SITE
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const imageURL = new URL(image, Astro.site);
 
-// Dữ liệu có cấu trúc cho Google (rich results)
+// Structured data for Google (rich results)
 const jsonLd =
   type === 'article'
     ? {
@@ -68,7 +68,7 @@ const jsonLd =
 <link rel="sitemap" href="/sitemap-index.xml" />
 <link rel="alternate" type="application/rss+xml" title={SITE.title} href={new URL('rss.xml', Astro.site)} />
 
-<!-- Open Graph (Facebook, Zalo, LinkedIn...) -->
+<!-- Open Graph (Facebook, LinkedIn...) -->
 <meta property="og:type" content={type} />
 <meta property="og:site_name" content={SITE.title} />
 <meta property="og:locale" content={SITE.locale} />
@@ -88,7 +88,7 @@ const jsonLd =
 
 <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
-<!-- Đặt theme trước khi render để không bị nháy trắng -->
+<!-- Set the theme before render to avoid a white flash -->
 <script is:inline>
   (function () {
     var t;

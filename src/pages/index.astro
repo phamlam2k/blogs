@@ -21,13 +21,13 @@ const topicCounts = await getTopicCounts();
     <p class="prompt muted">whoami</p>
     <div class="prose"><Intro /></div>
     <p class="muted small">
-      <span class="accent">{posts.length}</span> blogs{' · '}<span class="accent">{repos.length}</span> repo{' · '}
+      <span class="accent">{posts.length}</span> posts{' · '}<span class="accent">{repos.length}</span> repos{' · '}
       <span class="accent">{links.length}</span> links{' · '}press <kbd>/</kbd> to search
       {SOCIALS.github && <>{' · '}<a href={SOCIALS.github} target="_blank" rel="noopener">GitHub ↗</a></>}
     </p>
   </section>
 
-  <h2 class="section-title">topic</h2>
+  <h2 class="section-title">topics</h2>
   <ul class="topics">
     {(Object.keys(TOPICS) as TopicKey[]).map((key) => (
       <li>
@@ -39,7 +39,7 @@ const topicCounts = await getTopicCounts();
 
   {repos.length > 0 && (
     <>
-      <h2 class="section-title">repo highly recommend</h2>
+      <h2 class="section-title">highly recommended repos</h2>
       <div class="repo-grid">
         {repos.slice(0, 4).map((repo) => <RepoCard repo={repo} compact />)}
       </div>
@@ -53,16 +53,16 @@ const topicCounts = await getTopicCounts();
       <ul class="plain">
         {links.slice(0, 4).map((link) => <LinkRow link={link} compact />)}
       </ul>
-      <p><a href="/lien-ket/">links →</a></p>
+      <p><a href="/links/">links →</a></p>
     </>
   )}
 
   <h2 class="section-title">labels</h2>
   <TagList tags={topTags} counts={tagCounts} />
 
-  <h2 class="section-title">new blogs</h2>
+  <h2 class="section-title">latest posts</h2>
   <PostList posts={latest} />
-  <p><a href="/blogs/">view more →</a></p>
+  <p><a href="/posts/">view more →</a></p>
 </BaseLayout>
 
 <style>

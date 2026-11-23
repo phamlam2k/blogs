@@ -1,13 +1,13 @@
 ---
-# Copy vào src/content/repos/, tên file tuỳ ý (vd: owner-repo.md)
+# Copy into src/content/repos/, any file name (e.g. owner-repo.md)
 name: owner/repo
 url: https://github.com/owner/repo
-description: 'Mô tả ngắn repo làm gì.'
+description: 'Short description of what the repo does.'
 language: TypeScript
-topic: cong-cu          # frontend | backend | devops | thuat-toan | cong-cu | ghi-chep
+topic: frontend          # frontend | algorithms
 tags: [cli]
 addedDate: 2026-01-01
-mine: false           # true nếu là repo của bạn
+mine: false           # true if it's your own repo
 ---
 
-(Không bắt buộc) Ghi chú vì sao bạn thích repo này — hỗ trợ Markdown.
+(Optional) A note on why you like this repo — Markdown supported.

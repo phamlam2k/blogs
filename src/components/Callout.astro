@@ -1,13 +1,13 @@
 ---
-// Dùng trong file .mdx:
+// Usage in .mdx files:
 //   import Callout from '../../components/Callout.astro';
-//   <Callout type="warn" title="Lưu ý">Nội dung...</Callout>
+//   <Callout type="warn" title="Heads up">Content...</Callout>
 interface Props {
   type?: 'info' | 'tip' | 'warn' | 'danger';
   title?: string;
 }
 const { type = 'info', title } = Astro.props;
-const labels = { info: 'GHI CHÚ', tip: 'MẸO', warn: 'LƯU Ý', danger: 'CẢNH BÁO' };
+const labels = { info: 'NOTE', tip: 'TIP', warn: 'WARNING', danger: 'DANGER' };
 ---
 
 <aside class={`callout ${type}`} role="note">

@@ -10,7 +10,7 @@ const { posts, showDescription = true } = Astro.props;
 
 {
   posts.length === 0 ? (
-    <p class="muted">// chưa có bài viết nào</p>
+    <p class="muted">// no posts yet</p>
   ) : (
     <ul class="post-list">
       {posts.map((post) => (

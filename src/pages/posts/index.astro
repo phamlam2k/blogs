@@ -8,8 +8,8 @@ const posts = await getPosts();
 const years = groupByYear(posts);
 ---
 
-<BaseLayout title="Tất cả bài viết" description="Toàn bộ bài viết trên blog, sắp xếp theo năm.">
-  <PageHeader command="ls -lt ./blogs" title="Bài viết" description={`${posts.length} bài viết`} />
+<BaseLayout title="All posts" description="Every post on the blog, grouped by year.">
+  <PageHeader command="ls -lt ./posts" title="Posts" description={`${posts.length} posts`} />
   {
     years.map(([year, list]) => (
       <section>

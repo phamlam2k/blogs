@@ -54,12 +54,12 @@ const minutes = readingTime(post.body);
 >
   <article>
     <header class="post-header">
-      <p class="crumbs muted"><a href="/blogs/">bài viết</a> / <TopicBadge topic={topic} /></p>
-      <h1>{draft && <span class="draft">[nháp] </span>}{title}</h1>
+      <p class="crumbs muted"><a href="/posts/">posts</a> / <TopicBadge topic={topic} /></p>
+      <h1>{draft && <span class="draft">[draft] </span>}{title}</h1>
       <p class="meta muted">
         <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
-        {updatedDate && <>{' · cập nhật '}<time datetime={updatedDate.toISOString()}>{formatDate(updatedDate)}</time></>}
-        {` · ${minutes} phút đọc`}
+        {updatedDate && <>{' · updated '}<time datetime={updatedDate.toISOString()}>{formatDate(updatedDate)}</time></>}
+        {` · ${minutes} min read`}
       </p>
       <TagList tags={tags} />
     </header>
@@ -71,28 +71,28 @@ const minutes = readingTime(post.body);
     </div>
   </article>
 
-  <nav class="pager" aria-label="Bài trước / sau">
-    {older ? <a href={`/blogs/${older.id}/`}>← {older.data.title}</a> : <span />}
-    {newer ? <a href={`/blogs/${newer.id}/`} class="right">{newer.data.title} →</a> : <span />}
+  <nav class="pager" aria-label="Previous / next post">
+    {older ? <a href={`/posts/${older.id}/`}>← {older.data.title}</a> : <span />}
+    {newer ? <a href={`/posts/${newer.id}/`} class="right">{newer.data.title} →</a> : <span />}
   </nav>
 
   {related.length > 0 && (
     <section>
-      <h2 class="section-title">bài viết liên quan</h2>
+      <h2 class="section-title">related posts</h2>
       <PostList posts={related} showDescription={false} />
     </section>
   )}
 
   {relatedRepos.length > 0 && (
     <section>
-      <h2 class="section-title">repo liên quan</h2>
+      <h2 class="section-title">related repos</h2>
       <div class="grid">{relatedRepos.map((r) => <RepoCard repo={r} compact />)}</div>
     </section>
   )}
 
   {relatedLinks.length > 0 && (
     <section>
-      <h2 class="section-title">đọc thêm</h2>
+      <h2 class="section-title">further reading</h2>
       <ul class="plain">{relatedLinks.map((l) => <LinkRow link={l} compact />)}</ul>
     </section>
   )}

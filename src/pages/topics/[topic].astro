@@ -21,23 +21,23 @@ const links = all.links.filter((l) => l.data.topic === topic);
 const tags = [...new Set([...posts, ...repos, ...links].flatMap((x) => x.data.tags))].sort();
 ---
 
-<BaseLayout title={`Chủ đề: ${info.name}`} description={info.description}>
+<BaseLayout title={`Topic: ${info.name}`} description={info.description}>
   <PageHeader command={`cd ./topics/${topic}`} title={info.name} description={info.description} />
   <TagList tags={tags} />
 
-  <h2 class="section-title">bài viết ({posts.length})</h2>
+  <h2 class="section-title">posts ({posts.length})</h2>
   <PostList posts={posts} />
 
   {repos.length > 0 && (
     <>
-      <h2 class="section-title">repo ({repos.length})</h2>
+      <h2 class="section-title">repos ({repos.length})</h2>
       <div class="grid">{repos.map((r) => <RepoCard repo={r} compact />)}</div>
     </>
   )}
 
   {links.length > 0 && (
     <>
-      <h2 class="section-title">liên kết ({links.length})</h2>
+      <h2 class="section-title">links ({links.length})</h2>
       <ul class="plain">{links.map((l) => <LinkRow link={l} compact />)}</ul>
     </>
   )}

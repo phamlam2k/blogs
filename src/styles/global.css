@@ -1,6 +1,6 @@
 /* ============================================================
-   dev blog — terminal-ish theme. Không dùng font ngoài, không framework CSS.
-   Muốn đổi chữ thân bài sang sans-serif: sửa --font-body bên dưới.
+   dev blog — terminal-ish theme. No external fonts, no CSS framework.
+   To switch body text to sans-serif: edit --font-body below.
    ============================================================ */
 
 :root {
@@ -18,7 +18,7 @@
   --fg: #24292f;
   --fg-muted: #6e7781;
   --border: #d8dee4;
-  --accent: #1a7f37; /* xanh lá terminal */
+  --accent: #1a7f37; /* terminal green */
   --accent-2: #0969da; /* link */
   --warn: #9a6700;
   --danger: #cf222e;
@@ -101,7 +101,7 @@ h3 {
   font-size: 1.05rem;
 }
 
-/* tiền tố kiểu markdown cho heading trong bài */
+/* markdown-style prefix for headings in posts */
 .prose h2::before {
   content: '## ';
   color: var(--accent);
@@ -147,7 +147,7 @@ pre {
   line-height: 1.6;
 }
 
-/* Shiki dual theme: mặc định light, đổi sang dark khi bật dark mode */
+/* Shiki dual theme: light by default, dark when dark mode is on */
 html[data-theme='dark'] .astro-code,
 html[data-theme='dark'] .astro-code span {
   color: var(--shiki-dark) !important;
@@ -234,7 +234,7 @@ kbd {
   text-decoration: none;
 }
 
-/* ---------- helpers dùng chung ---------- */
+/* ---------- shared helpers ---------- */
 .muted {
   color: var(--fg-muted);
 }

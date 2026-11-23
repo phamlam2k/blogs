@@ -1,21 +1,21 @@
 import type { APIRoute } from 'astro';
 import { getAll } from '../utils/content';
 
-// Index tìm kiếm tĩnh, sinh lúc build. Trang /search tải file này rồi lọc trên trình duyệt.
+// Static search index generated at build time. The /search page fetches it and filters in the browser.
 export const GET: APIRoute = async () => {
   const { posts, repos, links } = await getAll();
   const index = [
     ...posts.map((p) => ({
-      type: 'blogs',
+      type: 'post',
       title: p.data.title,
       desc: p.data.description,
-      url: `/blogs/${p.id}/`,
+      url: `/posts/${p.id}/`,
       topic: p.data.topic,
       tags: p.data.tags,
       date: p.data.pubDate.toISOString().slice(0, 10),
     })),
     ...repos.map((r) => ({
-      type: 'repos',
+      type: 'repo',
       title: r.data.name,
       desc: r.data.description,
       url: r.data.url,
@@ -24,7 +24,7 @@ export const GET: APIRoute = async () => {
       date: r.data.addedDate.toISOString().slice(0, 10),
     })),
     ...links.map((l) => ({
-      type: 'links',
+      type: 'link',
       title: l.data.title,
       desc: `${l.data.source}`,
       url: l.data.url,

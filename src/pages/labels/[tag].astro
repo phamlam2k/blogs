@@ -18,28 +18,28 @@ const repos = all.repos.filter((r) => r.data.tags.includes(tag!));
 const links = all.links.filter((l) => l.data.tags.includes(tag!));
 ---
 
-<BaseLayout title={`#${tag}`} description={`Bài viết, repo và liên kết được gắn nhãn #${tag}.`}>
-  <PageHeader command={`grep -r "#${tag}" .`} title={`#${tag}`} description={`${posts.length + repos.length + links.length} kết quả`} />
+<BaseLayout title={`#${tag}`} description={`Posts, repos and links labeled #${tag}.`}>
+  <PageHeader command={`grep -r "#${tag}" .`} title={`#${tag}`} description={`${posts.length + repos.length + links.length} results`} />
 
   {posts.length > 0 && (
     <>
-      <h2 class="section-title">bài viết</h2>
+      <h2 class="section-title">posts</h2>
       <PostList posts={posts} />
     </>
   )}
   {repos.length > 0 && (
     <>
-      <h2 class="section-title">repo</h2>
+      <h2 class="section-title">repos</h2>
       <div class="grid">{repos.map((r) => <RepoCard repo={r} compact />)}</div>
     </>
   )}
   {links.length > 0 && (
     <>
-      <h2 class="section-title">liên kết</h2>
+      <h2 class="section-title">links</h2>
       <ul class="plain">{links.map((l) => <LinkRow link={l} compact />)}</ul>
     </>
   )}
-  <p><a href="/nhan/">← tất cả nhãn</a></p>
+  <p><a href="/labels/">← all labels</a></p>
 </BaseLayout>
 
 <style>

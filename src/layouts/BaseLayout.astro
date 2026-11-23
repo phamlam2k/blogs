@@ -16,7 +16,7 @@ const props = Astro.props;
     <slot name="head" />
   </head>
   <body>
-    <a class="skip-link" href="#main">Bỏ qua tới nội dung</a>
+    <a class="skip-link" href="#main">Skip to content</a>
     <Header />
     <main id="main">
       <slot />
@@ -24,21 +24,21 @@ const props = Astro.props;
     <Footer />
 
     <script>
-      // Nút copy cho mọi code block
+      // Copy button for every code block
       document.querySelectorAll('pre').forEach((pre) => {
         const btn = document.createElement('button');
         btn.className = 'copy-btn';
         btn.type = 'button';
-        btn.textContent = 'sao chép';
+        btn.textContent = 'copy';
         btn.addEventListener('click', async () => {
           const code = pre.querySelector('code')?.innerText ?? pre.innerText;
           try {
             await navigator.clipboard.writeText(code);
-            btn.textContent = 'đã chép!';
+            btn.textContent = 'copied!';
           } catch {
-            btn.textContent = 'lỗi';
+            btn.textContent = 'error';
           }
-          setTimeout(() => (btn.textContent = 'sao chép'), 1500);
+          setTimeout(() => (btn.textContent = 'copy'), 1500);
         });
         pre.appendChild(btn);
       });

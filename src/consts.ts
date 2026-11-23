@@ -1,16 +1,16 @@
 // ============================================================
-//  CẤU HÌNH CHUNG CỦA BLOG — sửa ở đây là đổi toàn trang
+//  GLOBAL BLOG CONFIG — change it here and it updates everywhere
 // ============================================================
 
 export const SITE = {
   title: 'liam.dev',
-  // Dòng mô tả mặc định cho SEO (trang chủ, trang không có mô tả riêng)
+  // Default SEO description (home page and pages without their own description)
   description:
-    'Blog cá nhân của một lập trình viên: ghi chép về frontend, backend, DevOps, thuật toán và những repo/bài viết đáng đọc.',
-  author: 'Phạm Ngọc Mai Lâm',
-  lang: 'vi',
-  locale: 'vi_VN',
-  // Ảnh mặc định khi share lên Facebook/Zalo/X (đặt file vào /public)
+    'A personal developer blog: notes on frontend, the algorithms hiding behind your tools, and repos/articles worth reading.',
+  author: 'Pham Ngoc Mai Lam',
+  lang: 'en',
+  locale: 'en_US',
+  // Default image when shared on Facebook/X/LinkedIn (put the file in /public)
   ogImage: '/og-default.png',
 };
 
@@ -20,42 +20,26 @@ export const SOCIALS = {
   linkedin: '',
 };
 
-// Menu trên header
+// Header menu
 export const NAV = [
   { href: '/posts/', label: 'posts' },
   { href: '/topics/', label: 'topics' },
-  { href: '/label/', label: 'labels' },
+  { href: '/labels/', label: 'labels' },
   { href: '/repos/', label: 'repos' },
 ];
 
 // ============================================================
-//  TOPICS — các chủ đề lớn. Mỗi bài viết/repo/link thuộc đúng 1 topic.
-//  Muốn thêm topic: thêm 1 mục vào đây, key (không dấu, nối bằng -) sẽ là URL (/topics/<key>/)
+//  TOPICS — the main categories. Each post/repo/link belongs to exactly 1 topic.
+//  To add a topic: add an entry here. The key (lowercase, dash-separated) becomes the URL (/topics/<key>/)
 // ============================================================
 export const TOPICS = {
   frontend: {
     name: 'Frontend',
-    description: 'HTML, CSS, JavaScript, React, framework và mọi thứ chạy trên trình duyệt.',
+    description: 'HTML, CSS, JavaScript, React, frameworks and everything that runs in the browser.',
   },
-  backend: {
-    name: 'Backend',
-    description: 'API, database, kiến trúc hệ thống, Node.js, Go, Rust...',
-  },
-  devops: {
-    name: 'DevOps',
-    description: 'Docker, Kubernetes, CI/CD, Linux, server và deploy.',
-  },
-  'thuat-toan': {
-    name: 'Thuật toán',
-    description: 'Cấu trúc dữ liệu, giải thuật, luyện LeetCode.',
-  },
-  'cong-cu': {
-    name: 'Công cụ',
-    description: 'Editor, terminal, CLI, workflow giúp code nhanh hơn.',
-  },
-  'ghi-chep': {
-    name: 'Ghi chép',
-    description: 'Ghi chép, suy nghĩ, nghề nghiệp và những thứ không thuộc mục nào.',
+  algorithms: {
+    name: 'Algorithms',
+    description: 'Data structures and algorithms seen through a front-end lens.',
   },
 } as const;
 

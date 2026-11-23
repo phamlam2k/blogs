@@ -7,12 +7,12 @@ const counts = await getTagCounts();
 const max = Math.max(1, ...counts.values());
 ---
 
-<BaseLayout title="Nhãn" description="Tất cả nhãn của bài viết, repo và link trên blog.">
-  <PageHeader command="grep -o '#[a-z-]*' -r . | sort | uniq -c" title="Nhãn" description={`${counts.size} nhãn`} />
+<BaseLayout title="Labels" description="All labels used on posts, repos and links on the blog.">
+  <PageHeader command="grep -o '#[a-z-]*' -r . | sort | uniq -c" title="Labels" description={`${counts.size} labels`} />
   <ul class="cloud">
     {[...counts.entries()].map(([tag, n]) => (
       <li style={`--w:${0.85 + (n / max) * 0.5}rem`}>
-        <a href={`/nhan/${tag}/`}>#{tag}</a><span class="muted">{n}</span>
+        <a href={`/labels/${tag}/`}>#{tag}</a><span class="muted">{n}</span>
       </li>
     ))}
   </ul>

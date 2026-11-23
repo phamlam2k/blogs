@@ -1,22 +1,24 @@
 ---
-# File mẫu — copy vào src/content/blog/, đổi tên (vd: ten-blogs.md) rồi viết.
-# Tên file sẽ thành URL: /blogs/ten-blogs/
-title: 'Tiêu đề bài viết'
-description: 'Mô tả 1-2 câu, hiện trên Google và khi share link (nên 120-160 ký tự).'
+# Template — copy into src/content/blog/ (subfolders are fine), rename it (e.g. my-post.md) and start writing.
+# The file path becomes the URL: src/content/blog/my-post.md -> /posts/my-post/
+title: 'Post title'
+description: 'A 1-2 sentence summary shown on Google and in link previews (ideally 120-160 characters).'
 pubDate: 2026-01-01
 # updatedDate: 2026-01-15
-# topic phải là một trong: frontend | backend | devops | thuat-toan | cong-cu | ghi-chep  (sửa danh sách ở src/consts.ts)
-topic: ghi-chep
+# topic must be one of: frontend | algorithms  (edit the list in src/consts.ts)
+topic: frontend
 tags: [tag-1, tag-2]
-draft: false  # true = bản nháp, chỉ thấy khi chạy npm run dev
-# pinned: true   # ghim lên đầu trang chủ
+draft: false  # true = draft, only visible with npm run dev
+# pinned: true   # pin to the top of the home page
+# series: 'Series name'
+# seriesOrder: 1
 ---
 
-Mở bài ở đây.
+Intro goes here.
 
-## Heading cấp 2 (hiện trong mục lục)
+## Level-2 heading (shown in the table of contents)
 
-Nội dung...
+Content...
 
 ```ts
 const hello = 'world';

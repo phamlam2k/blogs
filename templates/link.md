@@ -1,11 +1,11 @@
 ---
-# Copy vào src/content/links/, tên file tuỳ ý
-title: 'Tiêu đề bài viết gốc'
-url: https://example.com/blogs
-source: 'Tên tác giả hoặc trang'
-topic: backend        # frontend | backend | devops | thuat-toan | cong-cu | ghi-chep
-tags: [kien-truc]
+# Copy into src/content/links/, any file name
+title: 'Original article title'
+url: https://example.com/article
+source: 'Author or site name'
+topic: frontend        # frontend | algorithms
+tags: [css]
 addedDate: 2026-01-01
 ---
 
-(Không bắt buộc) 1-3 câu tóm tắt / nhận xét của bạn.
+(Optional) 1-3 sentences summarizing the article or your take on it.

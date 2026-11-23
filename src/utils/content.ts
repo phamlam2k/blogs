@@ -5,10 +5,15 @@ export type Post = CollectionEntry<'blog'>;
 export type Repo = CollectionEntry<'repos'>;
 export type LinkItem = CollectionEntry<'links'>;
 
-/** Bài viết đã xuất bản (bản nháp chỉ hiện khi chạy `npm run dev`), mới nhất trước */
+/** Published posts (drafts only show with `npm run dev`), newest first */
 export async function getPosts(): Promise<Post[]> {
   const posts = await getCollection('blog', ({ data }) => import.meta.env.DEV || !data.draft);
-  return posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+  // Same date: the later part of a series counts as newer (keeps prev/next links in reading order)
+  return posts.sort(
+    (a, b) =>
+      b.data.pubDate.valueOf() - a.data.pubDate.valueOf() ||
+      (b.data.seriesOrder ?? 0) - (a.data.seriesOrder ?? 0),
+  );
 }
 
 export async function getRepos(): Promise<Repo[]> {
@@ -26,7 +31,7 @@ export async function getAll() {
   return { posts, repos, links };
 }
 
-/** Đếm số lần xuất hiện của từng tag trên cả 3 loại nội dung */
+/** Count how often each tag appears across all 3 content types */
 export async function getTagCounts(): Promise<Map<string, number>> {
   const { posts, repos, links } = await getAll();
   const counts = new Map<string, number>();
@@ -46,8 +51,8 @@ export async function getTopicCounts(): Promise<Record<TopicKey, number>> {
 }
 
 /**
- * Bài liên quan: mỗi tag trùng +2 điểm, cùng topic +1 điểm.
- * Lấy những bài có điểm > 0, điểm cao trước, cùng điểm thì bài mới hơn trước.
+ * Related posts: +2 points per shared tag, +1 point for the same topic.
+ * Keeps posts with score > 0, highest first; ties go to the newer post.
  */
 export function getRelatedPosts(current: Post, all: Post[], limit = 3): Post[] {
   const currentTags = new Set(current.data.tags);
@@ -64,7 +69,7 @@ export function getRelatedPosts(current: Post, all: Post[], limit = 3): Post[] {
     .map((x) => x.post);
 }
 
-/** Repo / link có chung tag với bài viết — hiện ở cuối bài */
+/** Repos / links sharing tags with the post — shown at the end of the post */
 export function getRelatedShares<T extends Repo | LinkItem>(current: Post, items: T[], limit = 3): T[] {
   const currentTags = new Set(current.data.tags);
   return items
@@ -75,17 +80,17 @@ export function getRelatedShares<T extends Repo | LinkItem>(current: Post, items
     .map((x) => x.it);
 }
 
-/** Ước lượng thời gian đọc (~220 từ/phút, code block tính như chữ) */
+/** Estimated reading time (~220 words/min, code blocks count as words) */
 export function readingTime(body: string | undefined): number {
   const words = (body ?? '').trim().split(/\s+/).filter(Boolean).length;
   return Math.max(1, Math.round(words / 220));
 }
 
 export function formatDate(date: Date): string {
-  return date.toISOString().slice(0, 10); // 2026-11-11 — đúng chất dev
+  return date.toISOString().slice(0, 10); // 2026-11-11 — proper dev style
 }
 
-/** Nhóm bài theo năm cho trang lưu trữ */
+/** Group posts by year for the archive page */
 export function groupByYear(posts: Post[]): [number, Post[]][] {
   const map = new Map<number, Post[]>();
   for (const p of posts) {

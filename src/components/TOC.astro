@@ -9,7 +9,7 @@ const items = Astro.props.headings.filter((h) => h.depth === 2 || h.depth === 3)
 {
   items.length >= 3 && (
     <details class="toc" open>
-      <summary>mục lục</summary>
+      <summary>contents</summary>
       <ol>
         {items.map((h) => (
           <li class={`d${h.depth}`}>

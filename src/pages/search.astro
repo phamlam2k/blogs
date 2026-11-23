@@ -3,11 +3,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHeader from '../components/PageHeader.astro';
 ---
 
-<BaseLayout title="Tìm kiếm" description="Tìm bài viết, repo và liên kết trên blog." noindex>
-  <PageHeader command="grep -ri" title="Tìm kiếm" />
+<BaseLayout title="Search" description="Search posts, repos and links on the blog." noindex>
+  <PageHeader command="grep -ri" title="Search" />
   <label class="box">
     <span class="accent">&gt;</span>
-    <input id="q" type="search" placeholder="gõ từ khoá, #nhãn hoặc chủ đề..." autocomplete="off" autofocus />
+    <input id="q" type="search" placeholder="type a keyword, #label or topic..." autocomplete="off" autofocus />
   </label>
   <p id="status" class="muted small"></p>
   <ul id="results"></ul>
@@ -21,7 +21,7 @@ import PageHeader from '../components/PageHeader.astro';
   const status = document.getElementById('status')!;
   let data: Item[] = [];
 
-  // Bỏ dấu tiếng Việt để gõ "su kien" vẫn ra "sự kiện"
+  // Strip diacritics so "cafe" also matches "café"
   const norm = (s: string) =>
     s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd');
 
@@ -34,7 +34,7 @@ import PageHeader from '../components/PageHeader.astro';
     history.replaceState(null, '', url);
     if (!q) {
       list.innerHTML = '';
-      status.textContent = `${data.length} mục có thể tìm`;
+      status.textContent = `${data.length} searchable items`;
       return;
     }
     const terms = q.split(/\s+/);
@@ -42,10 +42,10 @@ import PageHeader from '../components/PageHeader.astro';
       const hay = norm([it.title, it.desc, it.topic, ...it.tags.map((t) => '#' + t)].join(' '));
       return terms.every((t) => hay.includes(t));
     });
-    status.textContent = `${hits.length} kết quả`;
+    status.textContent = `${hits.length} results`;
     list.innerHTML = hits
       .map((it) => {
-        const ext = it.type !== 'bài viết';
+        const ext = it.type !== 'post';
         return `<li>
           <span class="type">[${it.type}]</span>
           <a href="${esc(it.url)}"${ext ? ' target="_blank" rel="noopener"' : ''}>${esc(it.title)}${ext ? ' ↗' : ''}</a>

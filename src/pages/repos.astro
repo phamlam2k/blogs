@@ -9,18 +9,18 @@ const mine = repos.filter((r) => r.data.mine);
 const others = repos.filter((r) => !r.data.mine);
 ---
 
-<BaseLayout title="Kho mã" description="Các repo GitHub mình viết hoặc thấy đáng xem, kèm ghi chú vì sao.">
-  <PageHeader command="gh repo list --starred" title="Kho mã" description="Repo của mình và những repo đáng lưu lại." />
+<BaseLayout title="Repos" description="GitHub repos I wrote or find worth checking out, with notes on why.">
+  <PageHeader command="gh repo list --starred" title="Repos" description="My own repos and the ones worth bookmarking." />
 
   {mine.length > 0 && (
     <>
-      <h2 class="section-title">của mình</h2>
+      <h2 class="section-title">mine</h2>
       <div class="grid">{mine.map((r) => <RepoCard repo={r} />)}</div>
     </>
   )}
 
-  <h2 class="section-title">đáng xem</h2>
-  {others.length === 0 ? <p class="muted">// chưa có repo nào</p> : <div class="grid">{others.map((r) => <RepoCard repo={r} />)}</div>}
+  <h2 class="section-title">worth a look</h2>
+  {others.length === 0 ? <p class="muted">// no repos yet</p> : <div class="grid">{others.map((r) => <RepoCard repo={r} />)}</div>}
 </BaseLayout>
 
 <style>

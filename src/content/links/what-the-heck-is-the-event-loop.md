@@ -7,4 +7,4 @@ tags: [javascript, event-loop, async]
 addedDate: 2026-11-05
 ---
 
-Bài nói kinh điển, có hình minh hoạ call stack và callback queue rất trực quan. Xem xong đọc lại bài event loop sẽ thấm hơn.
+A classic talk with very intuitive visuals of the call stack and callback queue. Watch it, then re-read the event loop post and it will really click.

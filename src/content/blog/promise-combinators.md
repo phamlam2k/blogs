@@ -1,53 +1,53 @@
 ---
-title: 'Promise.all, allSettled, race, any — chọn cái nào?'
-description: 'So sánh 4 hàm gộp Promise trong JavaScript: khi nào resolve, khi nào reject, và ví dụ dùng thực tế cho từng hàm.'
+title: 'Promise.all, allSettled, race, any — which one to pick?'
+description: 'Comparing the 4 Promise combinators in JavaScript: when they resolve, when they reject, and a practical use case for each.'
 pubDate: 2026-11-08
 topic: frontend
 tags: [javascript, async]
 ---
 
-Khi cần chạy nhiều tác vụ bất đồng bộ **song song**, JavaScript có 4 hàm gộp Promise. Chúng chỉ khác nhau ở một câu hỏi: _khi nào thì coi là xong, và xong thế nào?_
+When you need to run several async tasks **in parallel**, JavaScript gives you 4 Promise combinators. They differ in only one question: _when is it considered done, and done how?_
 
-## Bảng so sánh nhanh
+## Quick comparison
 
-| Hàm | Resolve khi | Reject khi |
+| Function | Resolves when | Rejects when |
 | --- | --- | --- |
-| `Promise.all` | **tất cả** thành công | **một** cái lỗi (fail-fast) |
-| `Promise.allSettled` | tất cả đã xong (dù lỗi hay không) | không bao giờ |
-| `Promise.race` | cái **đầu tiên** xong là thành công | cái đầu tiên xong là lỗi |
-| `Promise.any` | cái **đầu tiên** thành công | **tất cả** đều lỗi (`AggregateError`) |
+| `Promise.all` | **all** succeed | **one** fails (fail-fast) |
+| `Promise.allSettled` | all have settled (success or failure) | never |
+| `Promise.race` | the **first** to settle succeeds | the first to settle fails |
+| `Promise.any` | the **first** one succeeds | **all** fail (`AggregateError`) |
 
-## Promise.all — cần đủ hết mới chạy tiếp
+## Promise.all — you need every piece to continue
 
 ```js
 const [user, posts] = await Promise.all([fetchUser(id), fetchPosts(id)]);
 ```
 
-Dùng khi thiếu một phần là trang không hiển thị được.
+Use it when the page can't render if any single part is missing.
 
-## Promise.allSettled — chạy hết, lỗi đâu ghi đó
+## Promise.allSettled — run everything, record each failure
 
 ```js
 const results = await Promise.allSettled(files.map(upload));
 const failed = results.filter((r) => r.status === 'rejected');
-console.log(`${failed.length} file upload lỗi`);
+console.log(`${failed.length} uploads failed`);
 ```
 
-Hợp với tác vụ hàng loạt, nơi một cái lỗi không nên làm hỏng cả mẻ.
+Great for batch jobs, where one failure shouldn't ruin the whole batch.
 
-## Promise.race — làm timeout
+## Promise.race — implementing a timeout
 
 ```js
 const timeout = (ms) => new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), ms));
 const data = await Promise.race([fetch(url), timeout(5000)]);
 ```
 
-## Promise.any — lấy nguồn nhanh nhất còn sống
+## Promise.any — take the fastest source that's still alive
 
 ```js
 const res = await Promise.any([fetch(mirrorA), fetch(mirrorB), fetch(mirrorC)]);
 ```
 
-Một mirror chết cũng không sao, miễn còn ít nhất một cái trả về.
+If one mirror is down, no problem — as long as at least one responds.
 
-> Cả 4 hàm đều **không huỷ** các Promise còn lại. Muốn huỷ thật sự (ví dụ huỷ request), dùng `AbortController`.
+> None of the 4 functions **cancel** the remaining Promises. To actually cancel work (e.g. abort a request), use `AbortController`.

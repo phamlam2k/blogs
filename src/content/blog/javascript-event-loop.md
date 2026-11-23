@@ -1,24 +1,24 @@
 ---
-title: 'Hiểu Event Loop trong JavaScript qua 4 ví dụ'
-description: 'Call stack, microtask, macrotask — đoán thứ tự console.log và hiểu vì sao Promise luôn chạy trước setTimeout.'
+title: 'Understanding the JavaScript Event Loop in 4 Examples'
+description: 'Call stack, microtasks, macrotasks — predict the order of console.log calls and learn why a Promise always runs before setTimeout.'
 pubDate: 2026-11-05
 topic: frontend
 tags: [javascript, async, event-loop]
 ---
 
-JavaScript chạy **đơn luồng**: tại một thời điểm chỉ có một đoạn code được thực thi. Vậy làm sao nó vừa chờ API, vừa chờ timer, mà giao diện không bị đứng? Câu trả lời là _event loop_.
+JavaScript is **single-threaded**: only one piece of code runs at any given moment. So how can it wait for an API, wait for a timer, and still keep the UI responsive? The answer is the _event loop_.
 
-## Ba thành phần cần nhớ
+## Three pieces to remember
 
-1. **Call stack** — nơi các hàm đang chạy được xếp chồng lên nhau.
-2. **Microtask queue** — callback của `Promise.then`, `queueMicrotask`, `await`.
-3. **Macrotask queue** (task queue) — callback của `setTimeout`, `setInterval`, sự kiện DOM, I/O.
+1. **Call stack** — where currently running functions are stacked on top of each other.
+2. **Microtask queue** — callbacks from `Promise.then`, `queueMicrotask`, `await`.
+3. **Macrotask queue** (task queue) — callbacks from `setTimeout`, `setInterval`, DOM events, I/O.
 
-Quy tắc vàng:
+The golden rule:
 
-> Sau mỗi macrotask, event loop chạy **hết sạch** microtask queue rồi mới lấy macrotask tiếp theo.
+> After every macrotask, the event loop **drains** the entire microtask queue before picking up the next macrotask.
 
-## Ví dụ 1: setTimeout 0 không phải là "ngay lập tức"
+## Example 1: setTimeout 0 is not "immediately"
 
 ```js
 console.log('A');
@@ -27,9 +27,9 @@ console.log('C');
 // A, C, B
 ```
 
-`setTimeout(..., 0)` chỉ đưa callback vào macrotask queue. Nó phải đợi call stack trống.
+`setTimeout(..., 0)` only puts the callback into the macrotask queue. It still has to wait for the call stack to be empty.
 
-## Ví dụ 2: Promise luôn chen hàng trước setTimeout
+## Example 2: a Promise always cuts in front of setTimeout
 
 ```js
 setTimeout(() => console.log('timeout'), 0);
@@ -38,9 +38,9 @@ console.log('sync');
 // sync, promise, timeout
 ```
 
-Code đồng bộ chạy xong → microtask (`promise`) → rồi mới tới macrotask (`timeout`).
+Synchronous code finishes → microtasks (`promise`) → only then the macrotask (`timeout`).
 
-## Ví dụ 3: await chia hàm làm hai nửa
+## Example 3: await splits a function in two
 
 ```js
 async function run() {
@@ -53,25 +53,25 @@ console.log('2');
 // 1, 2, 3
 ```
 
-Mọi thứ **sau** `await` được đưa vào microtask queue, nên `2` in ra trước `3`.
+Everything **after** `await` is queued as a microtask, so `2` is printed before `3`.
 
-## Ví dụ 4: microtask lồng nhau có thể làm treo trang
+## Example 4: nested microtasks can freeze the page
 
 ```js
 function loop() {
   Promise.resolve().then(loop);
 }
-loop(); // ⚠ trình duyệt không bao giờ được render lại
+loop(); // ⚠ the browser never gets a chance to re-render
 ```
 
-Vì microtask queue phải chạy hết mới tới lượt render, một chuỗi microtask vô tận sẽ chặn UI. Với `setTimeout(loop, 0)` thì trang vẫn mượt, vì giữa các macrotask trình duyệt có cơ hội render.
+Because the microtask queue must be fully drained before rendering happens, an endless chain of microtasks blocks the UI. With `setTimeout(loop, 0)` the page stays smooth, because the browser gets a chance to render between macrotasks.
 
-## Tóm tắt
+## Summary
 
-| Loại | Ví dụ | Khi nào chạy |
+| Kind | Example | When it runs |
 | --- | --- | --- |
-| Sync | `console.log` | ngay |
-| Microtask | `Promise.then`, `await` | ngay sau khi stack trống |
-| Macrotask | `setTimeout`, click | sau khi microtask đã hết |
+| Sync | `console.log` | immediately |
+| Microtask | `Promise.then`, `await` | right after the stack is empty |
+| Macrotask | `setTimeout`, click | after all microtasks are done |
 
-Muốn tự kiểm tra, dán các ví dụ trên vào DevTools console và đoán trước kết quả.
+To test yourself, paste the examples above into the DevTools console and guess the output first.
