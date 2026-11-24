@@ -4,7 +4,7 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 
 // TODO: change to your real domain before deploying (used for sitemap, RSS, canonical, Open Graph)
-const SITE_URL = 'https://example.com';
+const SITE_URL = 'https://www.lampnm.dev';
 
 export default defineConfig({
   site: SITE_URL,
