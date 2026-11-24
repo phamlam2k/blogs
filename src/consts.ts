@@ -3,7 +3,7 @@
 // ============================================================
 
 export const SITE = {
-  title: 'liam.dev',
+  title: 'lampnm.dev',
   // Default SEO description (home page and pages without their own description)
   description:
     'A personal developer blog: notes on frontend, the algorithms hiding behind your tools, and repos/articles worth reading.',

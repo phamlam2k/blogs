@@ -10,7 +10,7 @@ import { Content as Intro } from '../intro.md';
 
 const { posts, repos, links } = await getAll();
 const pinned = posts.filter((p) => p.data.pinned);
-const latest = [...pinned, ...posts.filter((p) => !p.data.pinned)].slice(0, 6);
+const latest = [...pinned, ...posts.filter((p) => !p.data.pinned)].slice(0, 5);
 const tagCounts = await getTagCounts();
 const topTags = [...tagCounts.keys()].slice(0, 15);
 const topicCounts = await getTopicCounts();
@@ -26,6 +26,10 @@ const topicCounts = await getTopicCounts();
       {SOCIALS.github && <>{' · '}<a href={SOCIALS.github} target="_blank" rel="noopener">GitHub ↗</a></>}
     </p>
   </section>
+
+  <h2 class="section-title">latest posts</h2>
+  <PostList posts={latest} />
+  <p><a href="/posts/">view more →</a></p>
 
   <h2 class="section-title">topics</h2>
   <ul class="topics">
@@ -59,10 +63,6 @@ const topicCounts = await getTopicCounts();
 
   <h2 class="section-title">labels</h2>
   <TagList tags={topTags} counts={tagCounts} />
-
-  <h2 class="section-title">latest posts</h2>
-  <PostList posts={latest} />
-  <p><a href="/posts/">view more →</a></p>
 </BaseLayout>
 
 <style>

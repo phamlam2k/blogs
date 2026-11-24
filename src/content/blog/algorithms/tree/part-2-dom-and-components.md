@@ -157,6 +157,63 @@ Many of the "rules" of component frameworks are really just tree rules:
 - **Context / provide-inject** — a component can read a value from its nearest **ancestor** that provides it, skipping the nodes in between. It's `closest()` for data.
 - **Re-rendering a subtree** — in React, when a component re-renders, its children re-render by default too. Re-rendering `<Page>` affects its whole **subtree** (`PostList`, `Post`, `Post`, `Sidebar`) but not its sibling `<Header>`. This is why "where you put state" matters: state placed high in the tree causes bigger subtrees to re-render.
 
+### The three traversals inside React
+
+The three orders from earlier aren't only for the DOM. React uses them on the component tree too. Take this tree:
+
+```
+App
+├── Header
+│   ├── Logo
+│   └── Nav
+└── Main
+    ├── Sidebar
+    └── PostList
+        └── PostItem
+```
+
+**Pre-order (parent first): rendering.** React has to call a parent before it knows which children exist. `App()` runs and returns `<Header />` and `<Main />`, and only then does React go down into them: `App → Header → Logo → Nav → Main → Sidebar → PostList → PostItem`. Context works the same way, because a Provider must sit above its consumers.
+
+```jsx
+<ThemeContext.Provider value="dark">
+  <Header /> {/* can read the theme: the Provider was visited first */}
+</ThemeContext.Provider>
+```
+
+**Post-order (children first): effects and cleanup.** Effects in children run before the effect in their parent: `Logo → Nav → Header → Sidebar → PostItem → PostList → Main → App`. By the time `Header`'s effect fires, `Logo` and `Nav` are already mounted, so a parent can safely measure its children's DOM.
+
+```jsx
+function Header() {
+  useEffect(() => console.log('Header effect'), []);
+  return <><Logo /><Nav /></>;
+}
+function Logo() {
+  useEffect(() => console.log('Logo effect'), []);
+  return <img src="/logo.svg" alt="" />;
+}
+// Console: "Logo effect", then "Header effect"
+```
+
+**Level-order (row by row): finding the nearest match.** No core React phase works level by level, but tooling does. Breadth-first search reaches the closest match first, so it won't wander down a deep branch while a match sits one level away:
+
+```js
+function findNearest(root, predicate) {
+  const queue = [root];
+  while (queue.length > 0) {
+    const node = queue.shift();
+    if (predicate(node)) return node;   // the first hit is the shallowest
+    queue.push(...(node.children ?? []));
+  }
+  return null;
+}
+```
+
+| You need... | Use | In React |
+|---|---|---|
+| The parent to act before its children | Pre-order | Render, Context |
+| The children's results before the parent | Post-order | Effects, cleanup |
+| The nearest or shallowest match | Level-order | Finding the closest component |
+
 ### Recursive components: when your data is a tree
 
 Sometimes the data itself is a tree — nested comments, a file explorer, a multi-level menu. You don't know how deep it goes. Five levels? Fifty?

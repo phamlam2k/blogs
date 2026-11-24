@@ -1,10 +1,10 @@
-# liam.dev — a developer blog (Astro)
+# lampnm.dev — a developer blog
 
 A static, lightweight, SEO-friendly blog: no JavaScript on the page by default, just a few tiny scripts for the theme toggle, the copy-code button and the search page.
 
 ## Getting started
 
-Requires the **latest Node.js 22** (Astro 7 needs `>= 22.23`). Check with `node -v`.
+Requires the **latest Node.js 22**. Check with `node -v`.
 
 ```bash
 npm install
