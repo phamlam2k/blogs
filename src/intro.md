@@ -1,1 +1,1 @@
-Hello 👋 for nothing, just a guy want to share something fun. My fullname is Pham Ngoc Mai Lam, you guys can call me lampnm. <br/>
+Hello 👋 I'm just a guy who wants to share something fun. I'm a frontend developer who loves digging into the core knowledge behind it.
