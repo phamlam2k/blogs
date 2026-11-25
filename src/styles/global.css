@@ -123,6 +123,13 @@ img {
   border-radius: var(--radius);
 }
 
+/* diagrams in posts (white background, exported from draw.io) */
+.prose img[src$='.svg'] {
+  display: block;
+  margin: 1.5rem auto 0.4rem;
+  border: 1px solid var(--border);
+}
+
 /* ---------- code ---------- */
 code,
 kbd,
